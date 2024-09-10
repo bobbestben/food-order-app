@@ -1,9 +1,21 @@
 
 
 yarn add next-auth
-
+yarn add mongoose
+yarn add bcrypt
+yarn add @auth/mongodb-adapter mongodb
+(need to add to google cloud but need $$)
 npm install mongodb
+yarn add next@canary
+yarn add @aws-sdk/client-s3
+yarn add uniqid
+yarn add react-hot-toast
 
+stuck at 3:30
+
+something wrogn with mongodb adaptor, ,cant get session
+
+s3 is using my account secret and access key
 
 To start app: npm run dev
 
