@@ -11,7 +11,16 @@ yarn add @aws-sdk/client-s3
 yarn add uniqid
 yarn add react-hot-toast
 
-stuck at 3:30
+TODO
+to fix
+menu-items page / new page / edit page / route and Menu Item Form
+
+
+Extensions:
+Prettier
+Auto import for javascript
+
+stuck at 8:19
 
 something wrogn with mongodb adaptor, ,cant get session
 
