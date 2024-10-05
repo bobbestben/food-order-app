@@ -10,6 +10,11 @@ yarn add next@canary
 yarn add @aws-sdk/client-s3
 yarn add uniqid
 yarn add react-hot-toast
+yarn add react-flying-item
+yarn add micro
+
+stripe webhook - download cli for local testing
+if nonlocal env, need to add endpoint in stripe
 
 TODO
 to fix
@@ -20,7 +25,11 @@ Extensions:
 Prettier
 Auto import for javascript
 
-stuck at 8:19
+stuck at 9:34
+
+UserForm()
+profile page.js ProfilePage()
+
 
 something wrogn with mongodb adaptor, ,cant get session
 
