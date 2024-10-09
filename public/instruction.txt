@@ -1,5 +1,5 @@
-
-
+Things to install:
+I think "npm install" should install all the dependencies, if not need to manually add:
 yarn add next-auth
 yarn add mongoose
 yarn add bcrypt
@@ -16,31 +16,22 @@ yarn add micro
 stripe webhook - download cli for local testing
 if nonlocal env, need to add endpoint in stripe
 
-TODO
-to fix
-menu-items page / new page / edit page / route and Menu Item Form
-
-
 Extensions:
 Prettier
 Auto import for javascript
 
-stuck at 9:34
-
-UserForm()
-profile page.js ProfilePage()
 
 
-something wrogn with mongodb adaptor, ,cant get session
+Notes:
+-something wrogn with mongodb adaptor, cant get session so this adaptor is skipped
 
-s3 is using my account secret and access key
+-s3 is using my account secret and access key
 
-To start app: npm run dev
+-To start app: npm run dev
 
 MongoDB:
 username: foodorderapp
 password: 62ZcsvJ6wLF0AaXI
-
 
 ConnectionString:
 mongodb+srv://foodorderapp:62ZcsvJ6wLF0AaXI@cluster0.qpwyy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
