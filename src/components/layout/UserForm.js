@@ -1,10 +1,10 @@
 'use client';
 import AddressInputs from "@/components/layout/AddressInputs";
 import EditableImage from "@/components/layout/EditableImage";
-import {useProfile} from "@/components/UseProfile";
-import {useState} from "react";
+import { useProfile } from "@/components/UseProfile";
+import { useEffect, useState } from "react";
 
-export default function UserForm({user,onSave}) {
+export default function UserForm({ user, onSave }) {
   const [userName, setUserName] = useState(user?.name || '');
   const [image, setImage] = useState(user?.image || '');
   const [phone, setPhone] = useState(user?.phone || '');
@@ -13,7 +13,7 @@ export default function UserForm({user,onSave}) {
   const [city, setCity] = useState(user?.city || '');
   const [country, setCountry] = useState(user?.country || '');
   const [admin, setAdmin] = useState(user?.admin || false);
-  const {data:loggedInUserData} = useProfile();
+  const { data: loggedInUserData } = useProfile();
 
   function handleAddressChange(propName, value) {
     if (propName === 'phone') setPhone(value);
@@ -22,6 +22,17 @@ export default function UserForm({user,onSave}) {
     if (propName === 'city') setCity(value);
     if (propName === 'country') setCountry(value);
   }
+
+  useEffect(() => {
+    const name = document.getElementById("name");
+    name.addEventListener("input", (event) => {
+      if (name.validity.patternMismatch) {
+        name.setCustomValidity("Name should contain upper or lowercase letters only");
+      } else {
+        name.setCustomValidity("");
+      }
+    });
+  }, []);
 
   return (
     <div className="md:flex gap-4">
@@ -34,7 +45,7 @@ export default function UserForm({user,onSave}) {
         className="grow"
         onSubmit={ev =>
           onSave(ev, {
-            name:userName, image, phone, admin,
+            name: userName, image, phone, admin,
             streetAddress, city, country, postalCode,
           })
         }
@@ -43,6 +54,7 @@ export default function UserForm({user,onSave}) {
           First and last name
         </label>
         <input
+          id="name" pattern="^[a-zA-Z ]*$"
           type="text" placeholder="First and last name"
           value={userName} onChange={ev => setUserName(ev.target.value)}
         />
@@ -54,7 +66,7 @@ export default function UserForm({user,onSave}) {
           placeholder={'email'}
         />
         <AddressInputs
-          addressProps={{phone, streetAddress, postalCode, city, country}}
+          addressProps={{ phone, streetAddress, postalCode, city, country }}
           setAddressProp={handleAddressChange}
         />
         {loggedInUserData.admin && (

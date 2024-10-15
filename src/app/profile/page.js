@@ -4,11 +4,11 @@ import InfoBox from "@/components/layout/InfoBox";
 import SuccessBox from "@/components/layout/SuccessBox";
 import UserForm from "@/components/layout/UserForm";
 import UserTabs from "@/components/layout/UserTabs";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import {redirect} from "next/navigation";
-import {useEffect, useState} from "react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function ProfilePage() {
@@ -17,7 +17,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [profileFetched, setProfileFetched] = useState(false);
-  const {status} = session;
+  const { status } = session;
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -35,21 +35,27 @@ export default function ProfilePage() {
     ev.preventDefault();
 
     const savingPromise = new Promise(async (resolve, reject) => {
+      // validate name
+      const name = data?.name;
+      if (!/^[a-zA-Z ]*$/.test(name)) {
+        reject("Name should contain upper or lowercase letters only");
+      }
+
       const response = await fetch('/api/profile', {
         method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       if (response.ok)
         resolve()
       else
-        reject();
+        reject("Error saving profile");
     });
 
     await toast.promise(savingPromise, {
       loading: 'Saving...',
       success: 'Profile saved!',
-      error: 'Error',
+      error: savingPromise.catch((error) => error),
     });
 
   }
