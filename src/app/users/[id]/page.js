@@ -5,6 +5,7 @@ import { useProfile } from "@/components/UseProfile";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { isValidUserForm } from "@/libs/validation";
 
 export default function EditUserPage() {
   const { loading, data } = useProfile();
@@ -22,12 +23,9 @@ export default function EditUserPage() {
   async function handleSaveButtonClick(ev, data) {
     ev.preventDefault();
     const promise = new Promise(async (resolve, reject) => {
-      // validate name
-      const name = data?.name;
-      if (!/^[a-zA-Z ]*$/.test(name)) {
-        reject("Name should contain upper or lowercase letters only");
+      if (!isValidUserForm(data, reject)) {
+        return;
       }
-
       const res = await fetch('/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

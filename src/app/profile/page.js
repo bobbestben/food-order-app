@@ -10,6 +10,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { isValidUserForm } from "@/libs/validation";
 
 export default function ProfilePage() {
   const session = useSession();
@@ -35,12 +36,9 @@ export default function ProfilePage() {
     ev.preventDefault();
 
     const savingPromise = new Promise(async (resolve, reject) => {
-      // validate name
-      const name = data?.name;
-      if (!/^[a-zA-Z ]*$/.test(name)) {
-        reject("Name should contain upper or lowercase letters only");
+      if (!isValidUserForm(data, reject)) {
+        return;
       }
-
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

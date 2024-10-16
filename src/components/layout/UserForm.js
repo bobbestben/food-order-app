@@ -3,6 +3,7 @@ import AddressInputs from "@/components/layout/AddressInputs";
 import EditableImage from "@/components/layout/EditableImage";
 import { useProfile } from "@/components/UseProfile";
 import { useEffect, useState } from "react";
+import { invalidAlphaNumericInputMsg, invalidNumericInputMsg, invalidTextInputMsg, setPatternMismatchMsg } from "@/libs/validation";
 
 export default function UserForm({ user, onSave }) {
   const [userName, setUserName] = useState(user?.name || '');
@@ -24,14 +25,12 @@ export default function UserForm({ user, onSave }) {
   }
 
   useEffect(() => {
-    const name = document.getElementById("name");
-    name.addEventListener("input", (event) => {
-      if (name.validity.patternMismatch) {
-        name.setCustomValidity("Name should contain upper or lowercase letters only");
-      } else {
-        name.setCustomValidity("");
-      }
-    });
+    setPatternMismatchMsg("name", invalidTextInputMsg("Name"));
+    setPatternMismatchMsg("phone", invalidNumericInputMsg("Phone"));
+    setPatternMismatchMsg("streetAddress", invalidAlphaNumericInputMsg("Street address"));
+    setPatternMismatchMsg("postalCode", invalidNumericInputMsg("Postal code"));
+    setPatternMismatchMsg("city", invalidTextInputMsg("City"));
+    setPatternMismatchMsg("country", invalidTextInputMsg("Country"));
   }, []);
 
   return (
@@ -62,7 +61,7 @@ export default function UserForm({ user, onSave }) {
         <input
           type="email"
           disabled={true}
-          value={user.email}
+          value={user?.email}
           placeholder={'email'}
         />
         <AddressInputs
