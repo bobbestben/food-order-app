@@ -23,6 +23,7 @@ export default function ProfilePage() {
     if (status === 'authenticated') {
       fetch('/api/profile').then(response => {
         response.json().then(data => {
+          console.log("@@@ Get User Profile: " + data)
           setUser(data);
           setIsAdmin(data.admin);
           setProfileFetched(true);
@@ -33,8 +34,9 @@ export default function ProfilePage() {
 
   async function handleProfileInfoUpdate(ev, data) {
     ev.preventDefault();
-
+    console.log("@@@@ handleProfileUpdate")
     const savingPromise = new Promise(async (resolve, reject) => {
+      console.log("@@@@ ProfileUpdate data here: " + data)
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},

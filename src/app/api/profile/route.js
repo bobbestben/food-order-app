@@ -17,7 +17,8 @@ export async function PUT(req) {
     const email = session.user.email;
     filter = {email};
   }
-
+  console.log("Update profile API: " + otherUserInfo)
+  console.log(otherUserInfo)
   const user = await User.findOne(filter);
   await User.updateOne(filter, {name, image});
   await UserInfo.findOneAndUpdate({email:user.email}, otherUserInfo, {upsert:true});
