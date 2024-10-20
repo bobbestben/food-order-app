@@ -1,6 +1,14 @@
 import Right from "@/components/icons/Right";
 import Image from "next/image";
 
+function redirectToMenuPage() {
+  location.href = "/menu";
+}
+
+function redirectToAboutUs() {
+  location.href = "/#about";
+}
+
 export default function Hero() {
   return (
     <section className="hero md:mt-4">
@@ -17,11 +25,13 @@ export default function Hero() {
           Pizza is the missing piece that makes every day complete, a simple yet delicious joy in life
         </p>
         <div className="flex gap-4 text-sm">
-          <button className="flex justify-center bg-primary uppercase flex items-center gap-2 text-white px-4 py-2 rounded-full">
+          <button className="flex justify-center bg-primary uppercase flex items-center gap-2 text-white px-4 py-2 rounded-full"
+            onClick={() => redirectToMenuPage()}>
             Order now
             <Right />
           </button>
-          <button className="flex items-center border-0 gap-2 py-2 text-gray-600 font-semibold">
+          <button className="flex items-center border-0 gap-2 py-2 text-gray-600 font-semibold"
+            onClick={() => redirectToAboutUs()}>
             Learn more
             <Right />
           </button>
