@@ -1,10 +1,11 @@
 'use client';
 import AddressInputs from "@/components/layout/AddressInputs";
 import EditableImage from "@/components/layout/EditableImage";
-import {useProfile} from "@/components/UseProfile";
-import {useState} from "react";
+import { useProfile } from "@/components/UseProfile";
+import { useEffect, useState } from "react";
+import { invalidAlphaNumericInputMsg, invalidNumericInputMsg, invalidTextInputMsg, setPatternMismatchMsg } from "@/libs/validation";
 
-export default function UserForm({user,onSave}) {
+export default function UserForm({ user, onSave }) {
   const [userName, setUserName] = useState(user?.name || '');
   const [image, setImage] = useState(user?.image || '');
   const [phone, setPhone] = useState(user?.phone || '');
@@ -13,7 +14,18 @@ export default function UserForm({user,onSave}) {
   const [city, setCity] = useState(user?.city || '');
   const [country, setCountry] = useState(user?.country || '');
   const [admin, setAdmin] = useState(user?.admin || false);
-  const {data:loggedInUserData} = useProfile();
+  const { data: loggedInUserData } = useProfile();
+
+  useEffect(() => {
+    setUserName(user?.name || '');
+    setImage(user?.image || '');
+    setPhone(user?.phone || '');
+    setStreetAddress(user?.streetAddress || '');
+    setPostalCode(user?.postalCode || '');
+    setCity(user?.city || '');
+    setCountry(user?.country || '');
+    setAdmin(user?.admin || false);
+  }, [user]);
 
   function handleAddressChange(propName, value) {
     if (propName === 'phone') setPhone(value);
@@ -22,6 +34,15 @@ export default function UserForm({user,onSave}) {
     if (propName === 'city') setCity(value);
     if (propName === 'country') setCountry(value);
   }
+
+  useEffect(() => {
+    setPatternMismatchMsg("name", invalidTextInputMsg("Name"));
+    setPatternMismatchMsg("phone", invalidNumericInputMsg("Phone"));
+    setPatternMismatchMsg("streetAddress", invalidAlphaNumericInputMsg("Street address"));
+    setPatternMismatchMsg("postalCode", invalidNumericInputMsg("Postal code"));
+    setPatternMismatchMsg("city", invalidTextInputMsg("City"));
+    setPatternMismatchMsg("country", invalidTextInputMsg("Country"));
+  }, []);
 
   return (
     <div className="md:flex gap-4">
@@ -34,7 +55,7 @@ export default function UserForm({user,onSave}) {
         className="grow"
         onSubmit={ev =>
           onSave(ev, {
-            name:userName, image, phone, admin,
+            name: userName, image, phone, admin,
             streetAddress, city, country, postalCode,
           })
         }
@@ -43,6 +64,7 @@ export default function UserForm({user,onSave}) {
           First and last name
         </label>
         <input
+          id="name" pattern="^[a-zA-Z ]*$"
           type="text" placeholder="First and last name"
           value={userName} onChange={ev => setUserName(ev.target.value)}
         />
@@ -50,11 +72,11 @@ export default function UserForm({user,onSave}) {
         <input
           type="email"
           disabled={true}
-          value={user.email}
+          value={user?.email}
           placeholder={'email'}
         />
         <AddressInputs
-          addressProps={{phone, streetAddress, postalCode, city, country}}
+          addressProps={{ phone, streetAddress, postalCode, city, country }}
           setAddressProp={handleAddressChange}
         />
         {loggedInUserData.admin && (
