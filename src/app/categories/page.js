@@ -1,15 +1,16 @@
 'use client';
 import DeleteButton from "@/components/DeleteButton";
 import UserTabs from "@/components/layout/UserTabs";
-import {useEffect, useState} from "react";
-import {useProfile} from "@/components/UseProfile";
+import { useEffect, useState } from "react";
+import { useProfile } from "@/components/UseProfile";
 import toast from "react-hot-toast";
+import { invalidTextInputMsg, isValidTextInput, setPatternMismatchMsg } from "@/libs/validation";
 
 export default function CategoriesPage() {
 
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([]);
-  const {loading:profileLoading, data:profileData} = useProfile();
+  const { loading: profileLoading, data: profileData } = useProfile();
   const [editedCategory, setEditedCategory] = useState(null);
 
   useEffect(() => {
@@ -24,18 +25,33 @@ export default function CategoriesPage() {
     });
   }
 
+  const categoryNameElement = document.getElementById("categoryName");
+
+  useEffect(() => {
+    if (categoryNameElement) {
+      setPatternMismatchMsg("categoryName", invalidTextInputMsg("Category name"));
+    }
+  }, [categoryNameElement]);
+
   async function handleCategorySubmit(ev) {
     ev.preventDefault();
     const creationPromise = new Promise(async (resolve, reject) => {
-      const data = {name:categoryName};
+      const data = { name: categoryName };
       if (editedCategory) {
         data._id = editedCategory._id;
       }
+
+      if (!isValidTextInput(data?.name)) {
+        reject(invalidTextInputMsg("Category name"));
+        return;
+      }
+
       const response = await fetch('/api/categories', {
         method: editedCategory ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+
       //to update categories after adding new category w useEffect
       setCategoryName('');
       fetchCategories();
@@ -43,20 +59,20 @@ export default function CategoriesPage() {
       if (response.ok)
         resolve();
       else
-        reject();
+        reject(editedCategory ? "Error updating category" : "Error creating category");
     });
     await toast.promise(creationPromise, {
       loading: editedCategory
-                 ? 'Updating category...'
-                 : 'Creating your new category...',
+        ? 'Updating category...'
+        : 'Creating your new category...',
       success: editedCategory ? 'Category updated' : 'Category created',
-      error: 'Error, sorry...',
+      error: creationPromise.catch((error) => error),
     });
   }
 
   async function handleDeleteClick(_id) {
     const promise = new Promise(async (resolve, reject) => {
-      const response = await fetch('/api/categories?_id='+_id, {
+      const response = await fetch('/api/categories?_id=' + _id, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -69,7 +85,7 @@ export default function CategoriesPage() {
     await toast.promise(promise, {
       loading: 'Deleting...',
       success: 'Deleted',
-      error: 'Error',
+      error: 'Error deleting category',
     });
 
     fetchCategories();
@@ -95,9 +111,12 @@ export default function CategoriesPage() {
                 <>: <b>{editedCategory.name}</b></>
               )}
             </label>
-            <input type="text"
-                   value={categoryName}
-                   onChange={ev => setCategoryName(ev.target.value)}
+            <input
+              id="categoryName"
+              pattern="^[a-zA-Z ]*$"
+              type="text"
+              value={categoryName}
+              onChange={ev => setCategoryName(ev.target.value)}
             />
           </div>
           <div className="pb-2 flex gap-2">
@@ -126,10 +145,10 @@ export default function CategoriesPage() {
             </div>
             <div className="flex gap-1">
               <button type="button"
-                      onClick={() => {
-                        setEditedCategory(c);
-                        setCategoryName(c.name);
-                      }}
+                onClick={() => {
+                  setEditedCategory(c);
+                  setCategoryName(c.name);
+                }}
               >
                 Edit
               </button>
