@@ -1,32 +1,45 @@
 import Image from "next/image";
 import toast from "react-hot-toast";
 
-export default function EditableImage({link, setLink}) {
+export default function EditableImage({ link, setLink }) {
 
   async function handleFileChange(ev) {
     const files = ev.target.files;
-    if (files?.length === 1) {
-      const data = new FormData;
-      data.set('file', files[0]);
 
-      const uploadPromise = fetch('/api/upload', {
-        method: 'POST',
-        body: data,
-      }).then(response => {
-        if (response.ok) {
-          return response.json().then(link => {
-            setLink(link);
-          })
+    const uploadPromise = new Promise(async (resolve, reject) => {
+      if (files?.length === 1) {
+        const data = new FormData;
+
+        // validate file type
+        const file = files[0];
+        console.log(file);
+        if (file.type != "image/png" && file.type != "image/jpeg") {
+          reject('Invalid file type. Image must be in PNG or JPEG format only.');
+          return;
         }
-        throw new Error('Something went wrong');
-      });
 
-      await toast.promise(uploadPromise, {
-        loading: 'Uploading...',
-        success: 'Upload complete',
-        error: 'Upload error',
-      });
-    }
+        data.set('file', files[0]);
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: data,
+        });
+        if (response.ok) {
+          resolve();
+          return response.json().then(link => setLink(link));
+        } else {
+          reject("Error uploading image");
+        }
+      } else {
+        return;
+      }
+    });
+
+    await toast.promise(uploadPromise, {
+      loading: 'Uploading...',
+      success: 'Upload complete',
+      error: uploadPromise.catch((error) => error),
+    });
   }
 
   return (
