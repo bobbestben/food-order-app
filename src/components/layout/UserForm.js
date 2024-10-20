@@ -16,6 +16,17 @@ export default function UserForm({ user, onSave }) {
   const [admin, setAdmin] = useState(user?.admin || false);
   const { data: loggedInUserData } = useProfile();
 
+  useEffect(() => {
+    setUserName(user?.name || '');
+    setImage(user?.image || '');
+    setPhone(user?.phone || '');
+    setStreetAddress(user?.streetAddress || '');
+    setPostalCode(user?.postalCode || '');
+    setCity(user?.city || '');
+    setCountry(user?.country || '');
+    setAdmin(user?.admin || false);
+  }, [user]);
+
   function handleAddressChange(propName, value) {
     if (propName === 'phone') setPhone(value);
     if (propName === 'streetAddress') setStreetAddress(value);
