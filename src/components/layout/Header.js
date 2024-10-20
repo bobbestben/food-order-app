@@ -1,12 +1,13 @@
 'use client';
-import {CartContext} from "@/components/AppContext";
+import { CartContext } from "@/components/AppContext";
 import Bars2 from "@/components/icons/Bars2";
 import ShoppingCart from "@/components/icons/ShoppingCart";
-import {signOut, useSession} from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import {useContext, useState} from "react";
+import { useContext, useState } from "react";
+import { useProfile } from "../UseProfile";
 
-function AuthLinks({status, userName}) {
+function AuthLinks({ status, userName }) {
   if (status === 'authenticated') {
     return (
       <>
@@ -33,16 +34,25 @@ function AuthLinks({status, userName}) {
   }
 }
 
+function getFirstName(name) {
+  if (name && name.includes(' ')) {
+    return name.split(' ')[0];
+  }
+  return name;
+}
+
 export default function Header() {
   const session = useSession();
   const status = session?.status;
-  const userData = session.data?.user;
-  let userName = userData?.name || userData?.email;
-  const {cartProducts} = useContext(CartContext);
+  // const userData = session.data?.user;
+  // let userName = userData?.name || userData?.email;
+
+  const profile = useProfile();
+  const userName = getFirstName(profile?.data?.name) || profile?.data?.email;
+
+  const { cartProducts } = useContext(CartContext);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  if (userName && userName.includes(' ')) {
-    userName = userName.split(' ')[0];
-  }
+
   return (
     <header>
       <div className="flex items-center md:hidden justify-between">
@@ -54,8 +64,8 @@ export default function Header() {
             <ShoppingCart />
             {cartProducts?.length > 0 && (
               <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
-            {cartProducts.length}
-          </span>
+                {cartProducts.length}
+              </span>
             )}
           </Link>
           <button
@@ -92,8 +102,8 @@ export default function Header() {
             <ShoppingCart />
             {cartProducts?.length > 0 && (
               <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
-            {cartProducts.length}
-          </span>
+                {cartProducts.length}
+              </span>
             )}
           </Link>
         </nav>

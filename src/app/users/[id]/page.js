@@ -6,8 +6,10 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { isValidUserForm } from "@/libs/validation";
+import { useSession } from "next-auth/react";
 
 export default function EditUserPage() {
+  const session = useSession();
   const { loading, data } = useProfile();
   const [user, setUser] = useState(null);
   const { id } = useParams();
@@ -31,10 +33,15 @@ export default function EditUserPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, _id: id }),
       });
-      if (res.ok)
+      if (res.ok) {
         resolve();
-      else
+        // refresh page to update username in header when name of current user is updated
+        if (session?.data?.user?.email == user?.email && user?.name !== data?.name) {
+          window.location.reload();
+        }
+      } else {
         reject("Error saving user");
+      }
     });
 
     await toast.promise(promise, {
