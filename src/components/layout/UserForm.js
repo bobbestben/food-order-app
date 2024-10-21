@@ -3,7 +3,7 @@ import AddressInputs from "@/components/layout/AddressInputs";
 import EditableImage from "@/components/layout/EditableImage";
 import { useProfile } from "@/components/UseProfile";
 import { useEffect, useState } from "react";
-import { invalidAlphaNumericInputMsg, invalidNumericInputMsg, invalidTextInputMsg, setPatternMismatchMsg } from "@/libs/validation";
+import { invalidAlphaNumericInputMsg, invalidNumericInputMsg, invalidTextInputMsg, setCustomValidityMsg } from "@/libs/validation";
 
 export default function UserForm({ user, onSave }) {
   const [userName, setUserName] = useState(user?.name || '');
@@ -36,12 +36,12 @@ export default function UserForm({ user, onSave }) {
   }
 
   useEffect(() => {
-    setPatternMismatchMsg("name", invalidTextInputMsg("Name"));
-    setPatternMismatchMsg("phone", invalidNumericInputMsg("Phone"));
-    setPatternMismatchMsg("streetAddress", invalidAlphaNumericInputMsg("Street address"));
-    setPatternMismatchMsg("postalCode", invalidNumericInputMsg("Postal code"));
-    setPatternMismatchMsg("city", invalidTextInputMsg("City"));
-    setPatternMismatchMsg("country", invalidTextInputMsg("Country"));
+    setCustomValidityMsg("name", "Name", invalidTextInputMsg);
+    setCustomValidityMsg("phone", "Phone", invalidNumericInputMsg);
+    setCustomValidityMsg("streetAddress", "Street address", invalidAlphaNumericInputMsg);
+    setCustomValidityMsg("postalCode", "Postal code", invalidNumericInputMsg);
+    setCustomValidityMsg("city", "City", invalidTextInputMsg);
+    setCustomValidityMsg("country", "Country", invalidTextInputMsg);
   }, []);
 
   return (

@@ -2,6 +2,7 @@ import Plus from "@/components/icons/Plus";
 import Trash from "@/components/icons/Trash";
 import EditableImage from "@/components/layout/EditableImage";
 import MenuItemPriceProps from "@/components/layout/MenuItemPriceProps";
+import { invalidNumericInputMsg, invalidSentenceInputMsg, invalidTextInputMsg, setCustomValidityMsg } from "@/libs/validation";
 import { useEffect, useState } from "react";
 
 export default function MenuItemForm({ onSubmit, menuItem, categories }) {
@@ -23,6 +24,12 @@ export default function MenuItemForm({ onSubmit, menuItem, categories }) {
     setExtraIngredientPrices(menuItem?.extraIngredientPrices || []);
   }, [menuItem, categories]);
 
+  useEffect(() => {
+    setCustomValidityMsg("itemName", "Item name", invalidTextInputMsg);
+    setCustomValidityMsg("itemDescription", "Description", invalidSentenceInputMsg);
+    setCustomValidityMsg("basePrice", "Base price", invalidNumericInputMsg);
+  }, []);
+
   return (
     <form
       onSubmit={ev =>
@@ -40,12 +47,17 @@ export default function MenuItemForm({ onSubmit, menuItem, categories }) {
         <div className="grow">
           <label>Item name</label>
           <input
+            id="itemName"
+            pattern="^[a-zA-Z ]*$"
+            required
             type="text"
             value={name}
             onChange={ev => setName(ev.target.value)}
           />
           <label>Description</label>
           <input
+            id="itemDescription"
+            pattern="^[\x20-\x7E]*$"
             type="text"
             value={description}
             onChange={ev => setDescription(ev.target.value)}
@@ -58,15 +70,22 @@ export default function MenuItemForm({ onSubmit, menuItem, categories }) {
           </select>
           <label>Base price</label>
           <input
+            id="basePrice"
+            pattern="^[0-9]*$"
+            required
             type="text"
             value={basePrice}
             onChange={ev => setBasePrice(ev.target.value)}
           />
-          <MenuItemPriceProps name={'Sizes'}
+          <MenuItemPriceProps
+            name={'Sizes'}
+            idPrefix={'size'}
             addLabel={'Add item size'}
             props={sizes}
             setProps={setSizes} />
-          <MenuItemPriceProps name={'Extra ingredients'}
+          <MenuItemPriceProps
+            name={'Extra ingredients'}
+            idPrefix={'ingredient'}
             addLabel={'Add ingredients prices'}
             props={extraIngredientPrices}
             setProps={setExtraIngredientPrices} />

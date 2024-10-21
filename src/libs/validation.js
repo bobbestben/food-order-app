@@ -161,13 +161,34 @@ export function requiredInputMsg(fieldName) {
   return fieldName + " is required";
 }
 
-export function setPatternMismatchMsg(id, message) {
+export function setCustomValidityMsg(id, fieldName, patternMismatchMsgFunc) {
   const element = document.getElementById(id);
+  setCustomValidityMsgForElement(element, fieldName, patternMismatchMsgFunc);
+}
+
+export function setCustomValidityMsgForElement(element, fieldName, patternMismatchMsgFunc) {
   element.addEventListener("input", (event) => {
     if (element.validity.patternMismatch) {
-      element.setCustomValidity(message);
+      element.setCustomValidity(patternMismatchMsgFunc(fieldName));
+    } else if (element.validity.valueMissing) {
+      element.setCustomValidity(requiredInputMsg(fieldName));
     } else {
       element.setCustomValidity("");
     }
   });
+
+  element.addEventListener("invalid", (event) => {
+    if (element.validity.patternMismatch) {
+      element.setCustomValidity(patternMismatchMsgFunc(fieldName));
+    } else if (element.validity.valueMissing) {
+      element.setCustomValidity(requiredInputMsg(fieldName));
+    }
+  });
+}
+
+export function setCustomValidityMsgForElementList(elements, fieldName, patternMismatchMsgFunc) {
+  for (let i = 0; i < elements.length; i++) {
+    const element = elements[i];
+    setCustomValidityMsgForElement(element, fieldName, patternMismatchMsgFunc);
+  }
 }

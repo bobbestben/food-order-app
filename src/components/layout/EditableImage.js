@@ -53,8 +53,8 @@ export default function EditableImage({ link, setLink }) {
         </div>
       )}
       <label>
-        <input type="file" className="hidden" onChange={handleFileChange} />
-        <span className="block border border-gray-300 rounded-lg p-2 text-center cursor-pointer">Change image</span>
+        <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleFileChange} />
+        <span className="block border border-gray-300 rounded-lg p-2 text-center cursor-pointer">{link ? "Change image" : "Upload image"}</span>
       </label>
     </>
   );

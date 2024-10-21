@@ -4,7 +4,7 @@ import UserTabs from "@/components/layout/UserTabs";
 import { useEffect, useState } from "react";
 import { useProfile } from "@/components/UseProfile";
 import toast from "react-hot-toast";
-import { invalidTextInputMsg, isValidTextInput, setPatternMismatchMsg } from "@/libs/validation";
+import { invalidTextInputMsg, isValidTextInput, setCustomValidityMsgForElement } from "@/libs/validation";
 
 export default function CategoriesPage() {
 
@@ -26,10 +26,9 @@ export default function CategoriesPage() {
   }
 
   const categoryNameElement = document.getElementById("categoryName");
-
   useEffect(() => {
     if (categoryNameElement) {
-      setPatternMismatchMsg("categoryName", invalidTextInputMsg("Category name"));
+      setCustomValidityMsgForElement(categoryNameElement, "Category name", invalidTextInputMsg);
     }
   }, [categoryNameElement]);
 
@@ -114,6 +113,7 @@ export default function CategoriesPage() {
             <input
               id="categoryName"
               pattern="^[a-zA-Z ]*$"
+              required
               type="text"
               value={categoryName}
               onChange={ev => setCategoryName(ev.target.value)}
