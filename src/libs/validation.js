@@ -38,6 +38,93 @@ export function isValidUserForm(data, reject) {
   return true;
 }
 
+export function isValidMenuItemForm(data, categories, reject) {
+  // validate item name
+  if (!data?.name) {
+    reject(requiredInputMsg("Item name"));
+    return false;
+  }
+  if (!isValidTextInput(data.name)) {
+    reject(invalidTextInputMsg("Item name"));
+    return false;
+  }
+
+  // validate description
+  if (!isValidSentenceInput(data?.description)) {
+    reject(invalidSentenceInputMsg("Description"));
+    return false;
+  }
+
+  // validate category
+  const isCategoryInList = categories.some(el => el?._id === data?.category);
+  if (!isCategoryInList) {
+    reject("Invalid Category");
+    return false;
+  }
+
+  // validate base price
+  if (!data?.basePrice) {
+    reject(requiredInputMsg("Base price"));
+    return false;
+  }
+  if (!isValidNumericInput(data.basePrice)) {
+    reject(invalidNumericInputMsg("Base price"));
+    return false;
+  }
+
+  // validate image
+  if (!data?.image) {
+    reject(requiredInputMsg("Image"));
+    return false;
+  }
+
+  // validate & update sizes
+  if (!validateAndUpdateListItems(data?.sizes, "Size", reject)) {
+    return false;
+  }
+
+  // validate & update ingredients
+  if (!validateAndUpdateListItems(data?.extraIngredientPrices, "Extra ingredient", reject)) {
+    return false;
+  }
+
+  return true;
+}
+
+function validateAndUpdateListItems(items, itemType, reject) {
+  let isValidItems = true;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+
+    // validate item name
+    if (!item?.name) {
+      reject(requiredInputMsg(itemType + " name"));
+      isValidItems = false;
+      break;
+    }
+    if (!isValidTextInput(item.name)) {
+      reject(invalidTextInputMsg(itemType + " name"));
+      isValidItems = false;
+      break;
+    }
+
+    // set item price as 0 if no value provided
+    if (!item?.price) {
+      item.price = 0;
+    }
+
+    // validate item price
+    if (!isValidNumericInput(item.price)) {
+      reject(invalidNumericInputMsg(itemType + " price"));
+      isValidItems = false;
+      break;
+    }
+  }
+
+  return isValidItems;
+}
+
 export function isValidTextInput(input) {
   return /^[a-zA-Z ]*$/.test(input);
 }
@@ -60,6 +147,18 @@ export function isValidAlphaNumericInput(input) {
 
 export function invalidAlphaNumericInputMsg(fieldName) {
   return fieldName + " should contain letters and numbers only";
+}
+
+export function isValidSentenceInput(input) {
+  return /^[\x20-\x7E]*$/.test(input);
+}
+
+export function invalidSentenceInputMsg(fieldName) {
+  return fieldName + " should contain English characters only";
+}
+
+export function requiredInputMsg(fieldName) {
+  return fieldName + " is required";
 }
 
 export function setPatternMismatchMsg(id, message) {
