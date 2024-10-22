@@ -16,7 +16,7 @@ function App(): React.JSX.Element {
       {/* Render the Home component */}
       {/* <Home /> */}
       <WebView 
-        source={{ uri: '172.20.10.6:3000' }} 
+        source={{ uri: '192.168.50.18:3000' }} // change ipaddress accordingly
         style={{ flex: 1 }}
       />
     </SafeAreaView>

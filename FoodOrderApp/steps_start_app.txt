@@ -1,0 +1,10 @@
+to run app:
+- start adroid emulator
+- open cmd, check ipv4address (ipconfig)
+- change ip address in code (App.tsx), save code
+- in main directory run webapp (npm run dev) 
+- check emulator status (adb devices), cmb should show: emulator-5554 devices
+- cd FoodOrderApp
+- start an build mobile app (npx react-native-run-android)
+- pop up appears: (dev server ready)
+- press "a" to run android
