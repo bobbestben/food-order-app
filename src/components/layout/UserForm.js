@@ -37,11 +37,6 @@ export default function UserForm({ user, onSave }) {
 
   useEffect(() => {
     setCustomValidityMsg("name", "Name", invalidTextInputMsg);
-    setCustomValidityMsg("phone", "Phone", invalidNumericInputMsg);
-    setCustomValidityMsg("streetAddress", "Street address", invalidAlphaNumericInputMsg);
-    setCustomValidityMsg("postalCode", "Postal code", invalidNumericInputMsg);
-    setCustomValidityMsg("city", "City", invalidTextInputMsg);
-    setCustomValidityMsg("country", "Country", invalidTextInputMsg);
   }, []);
 
   return (

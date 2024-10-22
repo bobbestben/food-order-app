@@ -5,31 +5,60 @@ export function isValidUserForm(data, reject) {
     return false;
   }
 
-  // validate phone
+  // validate address inputs
+  if (!isValidAddressInputs(data, false, reject)) {
+    return false;
+  }
+
+  return true;
+}
+
+export function isValidAddressInputs(data, isRequired, reject) {
+  // validate phone number
+  if (isRequired && !data?.phone) {
+    reject(requiredInputMsg("Phone number"));
+    return false;
+  }
   if (!isValidNumericInput(data?.phone)) {
-    reject(invalidNumericInputMsg("Phone"));
+    reject(invalidNumericInputMsg("Phone number"));
     return false;
   }
 
   // validate street address
+  if (isRequired && !data?.streetAddress) {
+    reject(requiredInputMsg("Street address"));
+    return false;
+  }
   if (!isValidAlphaNumericInput(data?.streetAddress)) {
     reject(invalidAlphaNumericInputMsg("Street address"));
     return false;
   }
 
   // validate postal code
+  if (isRequired && !data?.postalCode) {
+    reject(requiredInputMsg("Postal code"));
+    return false;
+  }
   if (!isValidNumericInput(data?.postalCode)) {
     reject(invalidNumericInputMsg("Postal code"));
     return false;
   }
 
   // validate city
+  if (isRequired && !data?.city) {
+    reject(requiredInputMsg("City"));
+    return false;
+  }
   if (!isValidTextInput(data?.city)) {
     reject(invalidTextInputMsg("City"));
     return false;
   }
 
   // validate country
+  if (isRequired && !data?.country) {
+    reject(requiredInputMsg("Country"));
+    return false;
+  }
   if (!isValidTextInput(data?.country)) {
     reject(invalidTextInputMsg("Country"));
     return false;
