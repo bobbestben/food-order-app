@@ -5,6 +5,7 @@ import AddressInputs from "@/components/layout/AddressInputs";
 import SectionHeaders from "@/components/layout/SectionHeaders";
 import CartProduct from "@/components/menu/CartProduct";
 import { useProfile } from "@/components/UseProfile";
+import { isValidAddressInputs } from "@/libs/validation";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -48,6 +49,9 @@ export default function CartPage() {
     // address and shopping cart products
 
     const promise = new Promise((resolve, reject) => {
+      if (!isValidAddressInputs(address, true, reject)) {
+        return;
+      }
       fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -60,7 +64,7 @@ export default function CartPage() {
           resolve();
           window.location = await response.json();
         } else {
-          reject();
+          reject("Something went wrong... Please try again later");
         }
       });
     });
@@ -68,7 +72,7 @@ export default function CartPage() {
     await toast.promise(promise, {
       loading: 'Preparing your order...',
       success: 'Redirecting to payment...',
-      error: 'Something went wrong... Please try again later',
+      error: promise.catch((error) => error),
     })
   }
 
@@ -119,6 +123,7 @@ export default function CartPage() {
             <AddressInputs
               addressProps={address}
               setAddressProp={handleAddressChange}
+              required={true}
             />
             <button type="submit">Pay ${subtotal + 5}</button>
           </form>

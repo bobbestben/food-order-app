@@ -44,10 +44,15 @@ export default function ProfilePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      if (response.ok)
-        resolve()
-      else
+      if (response.ok) {
+        resolve();
+        // refresh page to update username in header when name is updated
+        if (user?.name !== data?.name) {
+          window.location.reload();
+        }
+      } else {
         reject("Error saving profile");
+      }
     });
 
     await toast.promise(savingPromise, {

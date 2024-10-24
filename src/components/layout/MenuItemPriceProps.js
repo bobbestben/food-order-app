@@ -2,16 +2,19 @@ import ChevronDown from "@/components/icons/ChevronDown";
 import ChevronUp from "@/components/icons/ChevronUp";
 import Plus from "@/components/icons/Plus";
 import Trash from "@/components/icons/Trash";
-import {useState} from "react";
+import { invalidNumericInputMsg, invalidTextInputMsg, setCustomValidityMsgForElementList } from "@/libs/validation";
+import { useEffect, useState } from "react";
 
-export default function MenuItemPriceProps({name,addLabel,props,setProps}) {
+export default function MenuItemPriceProps({ name, idPrefix, addLabel, props, setProps }) {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [propsState, setPropsState] = useState(false);
 
   function addProp() {
     setProps(oldProps => {
-      return [...oldProps, {name:'', price:0}];
+      return [...oldProps, { name: '', price: 0 }];
     });
+    setPropsState(!propsState);
   }
 
   function editProp(ev, index, prop) {
@@ -24,8 +27,23 @@ export default function MenuItemPriceProps({name,addLabel,props,setProps}) {
   }
 
   function removeProp(indexToRemove) {
-    setProps(prev => prev.filter((v,index) => index !== indexToRemove));
+    setProps(prev => prev.filter((v, index) => index !== indexToRemove));
+    setPropsState(!propsState);
   }
+
+  useEffect(() => {
+    const sizeNameElements = document.querySelectorAll("[id='sizeName']");
+    setCustomValidityMsgForElementList(sizeNameElements, "Size name", invalidTextInputMsg);
+
+    const sizePriceElements = document.querySelectorAll("[id='sizePrice']");
+    setCustomValidityMsgForElementList(sizePriceElements, "Size price", invalidNumericInputMsg);
+
+    const ingredientNameElements = document.querySelectorAll("[id='ingredientName']");
+    setCustomValidityMsgForElementList(ingredientNameElements, "Extra ingredient name", invalidTextInputMsg);
+
+    const ingredientPriceElements = document.querySelectorAll("[id='ingredientPrice']");
+    setCustomValidityMsgForElementList(ingredientPriceElements, "Extra ingredient price", invalidNumericInputMsg);
+  }, [propsState]);
 
   return (
     <div className="bg-gray-200 p-2 rounded-md mb-2">
@@ -43,27 +61,35 @@ export default function MenuItemPriceProps({name,addLabel,props,setProps}) {
         <span>({props?.length})</span>
       </button>
       <div className={isOpen ? 'block' : 'hidden'}>
-        {props?.length > 0 && props.map((size,index) => (
+        {props?.length > 0 && props.map((size, index) => (
           <div key={index} className="flex items-end gap-2">
             <div>
               <label>Name</label>
-              <input type="text"
-                     placeholder="Size name"
-                     value={size.name}
-                     onChange={ev => editProp(ev, index, 'name')}
+              <input
+                id={idPrefix + "Name"}
+                pattern="^[a-zA-Z ]*$"
+                required
+                type="text"
+                placeholder="Name"
+                value={size.name}
+                onChange={ev => editProp(ev, index, 'name')}
               />
             </div>
             <div>
               <label>Extra price</label>
-              <input type="text" placeholder="Extra price"
-                     value={size.price}
-                     onChange={ev => editProp(ev, index, 'price')}
+              <input
+                id={idPrefix + "Price"}
+                pattern="^[0-9]*$"
+                type="text"
+                placeholder="Extra price"
+                value={size.price}
+                onChange={ev => editProp(ev, index, 'price')}
               />
             </div>
             <div>
               <button type="button"
-                      onClick={() => removeProp(index)}
-                      className="bg-white mb-2 px-2">
+                onClick={() => removeProp(index)}
+                className="bg-white mb-2 px-2">
                 <Trash />
               </button>
             </div>
