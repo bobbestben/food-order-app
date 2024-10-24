@@ -1,0 +1,42 @@
+Things to install:
+I think "npm install" should install all the dependencies, if not need to manually add:
+yarn add next-auth
+yarn add mongoose
+yarn add bcrypt
+yarn add @auth/mongodb-adapter mongodb
+(need to add to google cloud but need $$)
+npm install mongodb
+yarn add next@canary
+yarn add @aws-sdk/client-s3
+yarn add uniqid
+yarn add react-hot-toast
+yarn add react-flying-item
+yarn add micro
+
+stripe webhook - download cli for local testing
+if nonlocal env, need to add endpoint in stripe
+
+Extensions:
+Prettier
+Auto import for javascript
+
+
+
+Notes:
+-something wrogn with mongodb adaptor, cant get session so this adaptor is skipped
+
+-s3 is using my account secret and access key
+
+-To start app: npm run dev
+
+MongoDB:
+username: foodorderapp
+password: 62ZcsvJ6wLF0AaXI
+
+ConnectionString:
+mongodb+srv://foodorderapp:62ZcsvJ6wLF0AaXI@cluster0.qpwyy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
+App Structure:
+layout.js
+home.js
