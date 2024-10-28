@@ -12,7 +12,21 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
       - name: Create .env file
-        run: echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env && echo "SITE_URL=${{ secrets.SITE_URL }}" >> .env
+        run: 
+          touch.env
+          echo MONGO_URL="mongodb+srv://foodorderapp:62ZcsvJ6wLF0AaXI@cluster0.qpwyy.mongodb.net/food-ordering?retryWrites=true&w=majority&appName=Cluster0" >> .env
+          echo NEXTAUTH_URL="http://localhost:3000/" >> .env
+          echo SECRET="asdasdasd123" >> .env
+          echo GOOGLE_CLIENT_ID="" >> .env
+          echo GOOGLE_CLIENT_SECRET="" >> .env
+          echo STRIE_SIGN_SECRET="47:00" >> .env
+          echo AWS_S3_BUCKET="ben007-food-ordering" >> .env
+          echo AWS_REGION="ap-southeast-2" >> .env
+          echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY=${{ secrets.ACCESS_KEY }}" >> .env
+          echo "STRIPE_SK=${{ secrets.STRIPE_SK }}" >> .env
+          echo "STRIPE_PK=${{ secrets.STRIPE_PK }}" >> .env
+          echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env && echo "SITE_URL=${{ secrets.SITE_URL }}" >> .env
       - name: Build docker image
         run: docker build -t bobbestben/food-order-app-app .
       - name: Login to docker hub
