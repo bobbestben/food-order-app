@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Create .env file
         run: 
-          touch .env
           echo MONGO_URL="mongodb+srv://foodorderapp:62ZcsvJ6wLF0AaXI@cluster0.qpwyy.mongodb.net/food-ordering?retryWrites=true&w=majority&appName=Cluster0" >> .env
           echo NEXTAUTH_URL="http://localhost:3000/" >> .env
           echo SECRET="asdasdasd123" >> .env
