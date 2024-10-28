@@ -1,6 +1,6 @@
 import {Order} from "@/models/Order";
 
-const stripe = require('stripe')(process.env.STRIPE_SK);
+const stripe = require('stripe')("sk_test_51Q3yLOChbYJiu2UxloOJzI8Em26RYR7Rr5KZsrRdsdlgLROinkq6MZWafPMOuJK5E425XDyxRoJFXN8L3GYE4WwW004MDKdlys");
 
 export async function POST(req) {
   const sig = req.headers.get('stripe-signature');
@@ -8,7 +8,7 @@ export async function POST(req) {
 
   try {
     const reqBuffer = await req.text();
-    const signSecret = process.env.STRIPE_SIGN_SECRET;
+    const signSecret = "47:00";
     event = stripe.webhooks.constructEvent(reqBuffer, sig, signSecret);
   } catch (e) {
     console.error('stripe error');

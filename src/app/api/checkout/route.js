@@ -3,7 +3,7 @@ import {MenuItem} from "@/models/MenuItem";
 import {Order} from "@/models/Order";
 import mongoose from "mongoose";
 import {getServerSession} from "next-auth";
-const stripe = require('stripe')(process.env.STRIPE_SK);
+const stripe = require('stripe')("sk_test_51Q3yLOChbYJiu2UxloOJzI8Em26RYR7Rr5KZsrRdsdlgLROinkq6MZWafPMOuJK5E425XDyxRoJFXN8L3GYE4WwW004MDKdlys");
 
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
