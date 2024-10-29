@@ -1,9 +1,10 @@
 'use client';
-import {signIn} from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import {useState} from "react";
 
 export default function LoginPage() {
+  const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginInProgress, setLoginInProgress] = useState(false);
@@ -16,6 +17,20 @@ export default function LoginPage() {
 
     setLoginInProgress(false);
   }
+
+  // Optional: Check session to verify JWT
+  async function fetchProtectedData() {
+    if (session && session.jwt) {
+      const res = await fetch("/api/protected-endpoint", {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      });
+      const data = await res.json();
+      console.log("Protected Data:", data);
+    }
+  }
+
   return (
     <section className="mt-8">
       <h1 className="text-center text-primary text-4xl mb-4">
@@ -28,13 +43,13 @@ export default function LoginPage() {
         <input type="password" name="password" placeholder="password" value={password}
                disabled={loginInProgress}
                onChange={ev => setPassword(ev.target.value)}/>
-        <button disabled={loginInProgress} type="submit">Login</button>
+        <button disabled={loginInProgress} type="submit">{loginInProgress ? "Logging in..." : "Login"}</button>
         <div className="my-4 text-center text-gray-500">
           or login with provider
         </div>
         <button type="button" onClick={() => signIn('google', {callbackUrl: '/'})}
                 className="flex gap-4 justify-center">
-          <Image src={'/google.png'} alt={''} width={24} height={24} />
+          <Image src={'/google.png'} alt={'Google logo'} width={24} height={24} />
           Login with google
         </button>
       </form>

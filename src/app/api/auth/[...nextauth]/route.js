@@ -6,7 +6,8 @@ import {User} from '@/models/User';
 import NextAuth, {getServerSession} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import jwt from "jsonwebtoken"; // Import JWT for manual token handling if needed
 
 export const authOptions = {
   secret: process.env.SECRET,
@@ -37,15 +38,36 @@ export const authOptions = {
         console.log("password2: " + user.password);
         console.log("password ok" + passwordOk);
         if (passwordOk) {
+          //return user;
           return user;
         }
 
-        return null
+        return null;
       }
     })
-  ]
-}
+  ],
+  callbacks: {
+    async jwt({ token, user, account }) {
+      // If the user just signed in, add the user ID and JWT to the token
+      if (account?.provider === "google") {
+        token.id = user.id; // assuming user has `id` field
+        token.jwt = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Pass the JWT to the client session
+      session.user.id = token.id;
+      session.jwt = token.jwt;
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/login", // or any path you define for the login page
+  },
+};
 
+/*
 export async function isAdmin() {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
@@ -58,7 +80,7 @@ export async function isAdmin() {
   }
   return userInfo.admin;
 }
-
+*/
 
 const handler = NextAuth(authOptions)
 
