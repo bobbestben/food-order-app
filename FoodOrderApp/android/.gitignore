@@ -1,0 +1,62 @@
+# Gradle files
+.gradle/
+build/
+
+# Local configuration files
+local.properties
+
+# User-specific files
+*.iml
+.idea/
+
+# Android Studio specific files
+/.idea/
+*.log
+*.bak
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Dependency directories
+/.gradle/
+/node_modules/
+
+# Keystore files (sensitive)
+*.jks
+*.keystore
+
+# Android build outputs
+/build/
+*/build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.ipr
+*.iml
+
+# Android Studio
+/.idea/
+
+# Android/gradle specific
+.gradle
+/build
+
+# Proguard
+proguard/
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# Android NDK files
+obj/
+*.a
+*.so
+
+# Android generated files
+gen/
+out/
